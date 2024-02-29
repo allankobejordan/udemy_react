@@ -24,17 +24,18 @@ function App() {
       });
       movement.type ==="Input" && setCurrentBalance((prevBalance) => prevBalance + Number(movement.value));
 
-
-      movement.type ==="Output" && setCurrentExpenses((prevExpenses) => prevExpenses + Number(movement.value));
-
-      currentBalance > 0 && setCurrentBalance ((prevBalance)=> prevBalance - Number(movement.value));
+      if(movement.type === "Output"){
+        setCurrentExpenses((prevExpenses) => prevExpenses + Number(movement.value));
+        currentBalance > 0 && setCurrentBalance ((prevBalance)=> prevBalance - Number(movement.value));
+      }
+   
     }
   }
 
   return (
    <div>
       <Header/>
-      <FinanceControl/>
+      <FinanceControl balance={currentBalance} expenses={currentExpenses} handleSetMovement={setNewMovement}/>
    </div>
 
   )
