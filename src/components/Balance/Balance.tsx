@@ -21,6 +21,35 @@ const Balance = ({emitMovement, currentBalance}: BalanceProps) =>{
         setInputValue("");
     };
 
+    const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if(inputName.trim().length === 0 || inputValue.trim().length === 0){
+            setIsFormValid(false);
+            return;
+        }
+
+        hideInputForm();
+        emitMovement({
+            name:inputName,
+            value:inputValue,
+            type: "Input",
+        });
+    };
+
+
+    const handleInputNameForm = (event: React.FormEvent<HTMLInputElement>) => {
+        const eventTarget = event.currentTarget as HTMLInputElement;
+        const eventValue  = eventTarget.value;
+        inputName.trim().length  > 0 ? setIsFormValid(true) : setIsFormValid(false);
+        setInputName(eventValue);
+    }
+    const handleInputValueForm = (event: React.FormEvent<HTMLInputElement>) => {
+        const eventTarget = event.currentTarget as HTMLInputElement;
+        const eventValue  = eventTarget.value;
+        inputValue.trim().length  > 0 ? setIsFormValid(true) : setIsFormValid(false);
+        setInputValue(eventValue);
+    }
+
     return(
         <div>
             <div className="balance_container">
@@ -34,6 +63,21 @@ const Balance = ({emitMovement, currentBalance}: BalanceProps) =>{
                     </h3>
                     {!renderInputForm &&(
                         <Button action={handleRenderInputForm} title="Entrada" priority="Input"/>
+                    )}
+
+                    {renderInputForm &&(
+                        <form onSubmit={formSubmitHandler}>
+
+                            <div className={`input_form_container${!isFormValid ? "invalid": ""}`}>
+                                <input type="text" placeholder="Nome" className="balance_input" value={inputName} onChange={handleInputNameForm} />
+                        <input type="text" placeholder="Valor" className="balance_input" value={inputValue} onChange={handleInputValueForm} />
+                            </div>
+
+                            <div className="action_form_buttons_container">
+                                <Button title="Cancelar" priority="Output" action={hideInputForm} />
+                                <Button title="Adicionar" priority="Input" action={hideInputForm} />
+                            </div>
+                        </form>
                     )}
                 </div>
             </div>
