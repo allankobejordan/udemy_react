@@ -1,44 +1,58 @@
-
-import './App.css'
-import Header from './components/Header/Header';
-import FinanceControl from './components/FinanceControl/FinanceControl';
-import { useState } from 'react';
-import { Movement } from './Models/interfaces/Movement/Movement';
+import { useState } from "react";
+import "./App.css";
+import FinanceControl from "./components/FinanceControl/FinanceControl";
+import Header from "./components/Header/Header";
+import { Movement } from "./models/interfaces/Movement/Movement";
+import Movements from "./components/Movements/Movements";
+import { FormatMoney } from "./utils/util";
 
 function App() {
-  const [currentBalance, setCurrentBalance] = useState(0); //state de saldo atual 
-  const [currentExpenses, setCurrentExpenses] = useState(0); //state de despesas atual
-  const [movementsItems, setMovementsItems] = useState<Array<Movement>>([]); //state de movimentações
+  const [currentBalance, setCurrentBalance] = useState(0); // State de saldo atual
+  const [currentExpenses, setCurrentExpenses] = useState(0); // State de despesas atual
+  const [movementsItens, setMovementsItens] = useState<Array<Movement>>([]); // State de movimentações
 
-  const setNewMovement = (movement: Movement) =>{
-    if(movement){
-      setMovementsItems((prevMovements)=>{
+  const setNewMovement = (movement: Movement) => {
+    if (movement) {
+      setMovementsItens((prevMovements) => {
         const movements = [...prevMovements];
         movements.unshift({
           name: movement.name,
-          value:movement.value,
-          type:movement.type,
-          id:Math.random().toString()
+          value: FormatMoney(movement.value),
+          type: movement.type,
+          id: Math.random().toString(),
         });
         return movements;
       });
-      movement.type ==="Input" && setCurrentBalance((prevBalance) => prevBalance + Number(movement.value));
 
-      if(movement.type === "Output"){
-        setCurrentExpenses((prevExpenses) => prevExpenses + Number(movement.value));
-        currentBalance > 0 && setCurrentBalance ((prevBalance)=> prevBalance - Number(movement.value));
+      movement.type === "Input" &&
+        setCurrentBalance(
+          (prevBalance) => prevBalance + Number(movement.value)
+        );
+
+      if (movement.type === "Output") {
+        setCurrentExpenses(
+          (prevExpenses) => prevExpenses + Number(movement.value)
+        );
+
+        currentBalance > 0 &&
+          setCurrentBalance(
+            (prevBalance) => prevBalance - Number(movement.value)
+          );
       }
-   
     }
-  }
+  };
 
   return (
-   <div>
-      <Header/>
-      <FinanceControl balance={currentBalance} expenses={currentExpenses} handleSetMovement={setNewMovement}/>
-   </div>
-
-  )
+    <div>
+      <Header />
+      <FinanceControl
+        balance={currentBalance}
+        expenses={currentExpenses}
+        handleSetMovement={setNewMovement}
+      />
+      <Movements movementsList={movementsItens} />
+    </div>
+  );
 }
 
-export default App
+export default App;

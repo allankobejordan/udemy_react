@@ -1,22 +1,28 @@
-import { FinanceControlProps } from "../../Models/interfaces/Movement/FinancesControlProps/FinancesControlProps";
-import "./FinanceControl.css";
-import { Movement } from "../../Models/interfaces/Movement/Movement";
+import { FinanceControlProps } from "../../models/interfaces/FinanceControlProps/FinanceControlProps";
+import { Movement } from "../../models/interfaces/Movement/Movement";
 import Balance from "../Balance/Balance";
+import Expense from "../Expense/Expense";
+import "./FinanceControl.css";
 
 const FinanceControl = ({
-    handleSetMovement,
-    balance,expenses
-}:FinanceControlProps) => {
+  handleSetMovement,
+  balance,
+  expenses,
+}: FinanceControlProps) => {
+  const receiveNewMovement = (movement: Movement) => {
+    movement && handleSetMovement(movement);
+  };
 
-    const receiveNewMovement = (movement: Movement) => {
-        movement && handleSetMovement(movement);
-    }
-    return(
-        <div className="container_finances">
-            <Balance currentBalance={balance} emitMovement={receiveNewMovement}/>
-            {/* <EXPENSE/> */}
-        </div>
-    );
+  return (
+    <div className="container_finances">
+      <Balance currentBalance={balance} emitMovement={receiveNewMovement} />
+      <Expense
+        currentBalance={balance}
+        currentExpenses={expenses}
+        emitMovement={receiveNewMovement}
+      />
+    </div>
+  );
 };
 
 export default FinanceControl;
